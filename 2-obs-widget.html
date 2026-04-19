@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYRGYZ ALERTS — OBS Виджет</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+/* Для OBS — прозрачный фон */
+body{background:transparent;display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:28px}
+.alert-wrap{display:flex;flex-direction:column;align-items:center;gap:0;opacity:0;transform:translateY(30px) scale(0.92);animation:alertIn 0.6s cubic-bezier(.34,1.56,.64,1) 0.3s forwards}
+@keyframes alertIn{to{opacity:1;transform:translateY(0) scale(1)}}
+.emoji-stack{position:relative;width:100px;height:110px;margin-bottom:18px}
+.emoji-hand{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:72px;line-height:1;animation:handBounce 1.8s ease-in-out infinite 1s}
+.emoji-coin{position:absolute;top:0;left:50%;transform:translateX(-30%);font-size:40px;line-height:1;animation:coinFloat 1.8s ease-in-out infinite 1s}
+@keyframes handBounce{0%,100%{transform:translateX(-50%) translateY(0) rotate(-3deg)}50%{transform:translateX(-50%) translateY(-10px) rotate(3deg)}}
+@keyframes coinFloat{0%,100%{transform:translateX(-30%) translateY(0) rotate(-5deg)}50%{transform:translateX(-30%) translateY(-12px) rotate(8deg)}}
+.alert-name{font-family:'Unbounded',sans-serif;font-size:32px;font-weight:900;color:#7C3AED;letter-spacing:-0.5px;white-space:nowrap;animation:textPop 0.5s cubic-bezier(.34,1.56,.64,1) 0.7s both}
+.alert-name .som{font-size:26px;text-decoration:underline;text-underline-offset:3px;color:#7C3AED}
+@keyframes textPop{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+.alert-line{width:80px;height:2px;background:#5B21B6;margin:10px auto 10px;animation:lineGrow 0.4s ease 1s both;transform-origin:center}
+@keyframes lineGrow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+.alert-msg{font-family:'Inter',sans-serif;font-size:18px;color:#fff;opacity:0;animation:fadeUp 0.4s ease 1.2s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:.85;transform:translateY(0)}}
+
+/* Панель настройки (скрыть в OBS через CSS) */
+.demo-bar{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 24px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:14px;width:360px}
+.demo-title{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-size:10px}
+.demo-amounts{display:flex;gap:6px;width:100%}
+.amt{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:7px 4px;text-align:center;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);cursor:pointer;transition:all .15s}
+.amt:hover,.amt.sel{border-color:#7C3AED;color:#A78BFA;background:rgba(124,58,237,0.15)}
+.demo-row{display:flex;gap:8px;width:100%}
+.demo-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;color:#fff;font-family:'Inter',sans-serif;font-size:13px;outline:none}
+.demo-input:focus{border-color:rgba(124,58,237,0.5)}
+.demo-input::placeholder{color:rgba(255,255,255,0.25)}
+.demo-btn{background:#7C3AED;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.demo-btn:hover{background:#6D28D9}
+
+/* === ДЛЯ OBS: скопируй URL и в Custom CSS добавь: .demo-bar { display: none !important; } === */
+</style>
+</head>
+<body>
+<div class="alert-wrap" id="alertWrap">
+  <div class="emoji-stack">
+    <span class="emoji-coin">🪙</span>
+    <span class="emoji-hand">👍</span>
+  </div>
+  <div class="alert-name" id="alertName">ИМЯ — 100<span class="som">с</span></div>
+  <div class="alert-line"></div>
+  <div class="alert-msg" id="alertMsg">Текст</div>
+</div>
+
+<div class="demo-bar">
+  <div class="demo-title">▶ Превью алерта (скрыть в OBS)</div>
+  <div class="demo-amounts">
+    <div class="amt" onclick="setAmt('100')">100с</div>
+    <div class="amt sel" onclick="setAmt('250')">250с</div>
+    <div class="amt" onclick="setAmt('500')">500с</div>
+    <div class="amt" onclick="setAmt('1000')">1000с</div>
+    <div class="amt" onclick="setAmt('2000')">2000с</div>
+  </div>
+  <div class="demo-row">
+    <input class="demo-input" id="nameIn" placeholder="Имя" value="Айбек">
+    <input class="demo-input" id="msgIn" placeholder="Сообщение" value="Лучший стример! 🔥" style="flex:2">
+  </div>
+  <div class="demo-row">
+    <button class="demo-btn" style="flex:1" onclick="playAlert()">▶ Запустить алерт</button>
+  </div>
+</div>
+
+<script>
+let selAmount='250';
+function setAmt(v){selAmount=v;document.querySelectorAll('.amt').forEach(a=>a.classList.remove('sel'));event.target.classList.add('sel');}
+function playAlert(){
+  const name=document.getElementById('nameIn').value||'Аноним';
+  const msg=document.getElementById('msgIn').value||'...';
+  const wrap=document.getElementById('alertWrap');
+  document.getElementById('alertName').innerHTML=name+' — '+selAmount+'<span class="som">с</span>';
+  document.getElementById('alertMsg').textContent=msg;
+  wrap.style.animation='none';wrap.style.opacity='0';wrap.style.transform='translateY(30px) scale(0.92)';
+  document.getElementById('alertName').style.animation='none';
+  document.getElementById('alertMsg').style.animation='none';
+  wrap.querySelector('.alert-line').style.animation='none';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    wrap.style.animation='alertIn 0.6s cubic-bezier(.34,1.56,.64,1) 0.1s forwards';
+    document.getElementById('alertName').style.animation='textPop 0.5s cubic-bezier(.34,1.56,.64,1) 0.5s both';
+    document.getElementById('alertMsg').style.animation='fadeUp 0.4s ease 0.9s forwards';
+    wrap.querySelector('.alert-line').style.animation='lineGrow 0.4s ease 0.7s both';
+  }));
+}
+// Авто-скрытие алерта через 6 сек (для реального OBS использования)
+// setInterval(()=>{ playAlert(); }, 6000);
+</script>
+</body>
+</html>

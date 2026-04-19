@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYRGYZ ALERTS — Стили алертов</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0B1A;color:#fff;font-family:'Inter',sans-serif}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;position:sticky;top:0;background:rgba(13,11,26,0.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);z-index:100}
+.logo{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900}.logo span{color:#9F7AEA}
+.nav-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.05);border-radius:10px;padding:4px}
+.tab{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,0.5);border:none;background:transparent;font-family:'Inter',sans-serif;transition:all .2s}
+.tab.active{background:#7C3AED;color:#fff}
+.tab:hover:not(.active){color:#fff;background:rgba(255,255,255,0.07)}
+.hero{padding:52px 32px 40px;text-align:center}
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#A78BFA;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;margin-bottom:16px}
+.page-title{font-family:'Unbounded',sans-serif;font-size:clamp(22px,4vw,36px);font-weight:900;letter-spacing:-1px;margin-bottom:10px}
+.page-sub{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:32px}
+.filter-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.filter-btn{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-family:'Inter',sans-serif;transition:all .2s}
+.filter-btn.on{border-color:#7C3AED;background:rgba(124,58,237,0.15);color:#A78BFA}
+.filter-btn:hover:not(.on){color:#fff;border-color:rgba(255,255,255,0.2)}
+.styles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:0 32px 80px;max-width:1100px;margin:0 auto}
+.style-card{border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);transition:transform .2s,border-color .2s;cursor:pointer;position:relative}
+.style-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,0.4)}
+.style-card.pro-card{border-color:rgba(124,58,237,0.25)}
+.card-preview{height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.prev-classic{background:#000}.prev-neon{background:#050010}.prev-minimal{background:#1a1a2e}.prev-fire{background:#0d0500}.prev-gaming{background:#000814}.prev-pastel{background:#1a0f2e}.prev-brutalism{background:#fff}.prev-hud{background:#000d1a}
+.p-emoji{font-size:40px;animation:bob 2.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.classic-name{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;color:#9F7AEA}
+.classic-name b{color:#fff}.classic-line{width:40px;height:2px;background:#7C3AED;margin:2px auto}.classic-msg{font-size:12px;color:rgba(255,255,255,0.5)}
+.neon-name{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;color:#fff;text-shadow:0 0 20px #A855F7,0 0 40px #7C3AED}
+.neon-name b{color:#E879F9;text-shadow:0 0 15px #E879F9}.neon-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#A855F7,transparent);margin:2px auto}.neon-msg{font-size:12px;color:rgba(232,121,249,0.6)}
+.min-name{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#fff}.min-name b{color:#A78BFA}.min-div{width:32px;height:1px;background:rgba(255,255,255,0.2);margin:4px auto}.min-msg{font-size:11px;color:rgba(255,255,255,0.35);font-style:italic}
+.fire-name{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;background:linear-gradient(90deg,#FF6B00,#FF0080);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fire-bar{width:120px;height:3px;background:linear-gradient(90deg,#FF6B00,#FF0080);border-radius:2px;margin:4px auto}.fire-msg{font-size:12px;color:rgba(255,107,0,0.6)}
+.gaming-box{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:10px 20px;text-align:center}
+.gaming-name{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;color:#00FF88}.gaming-name b{color:#fff}.gaming-msg{font-size:11px;color:rgba(0,255,136,0.5);margin-top:4px}.gaming-tag{font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(0,255,136,0.4);text-transform:uppercase;margin-bottom:4px}
+.pastel-bubble{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:16px;padding:12px 20px;text-align:center}
+.pastel-name{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#C4B5FD}.pastel-name b{color:#fff}.pastel-msg{font-size:12px;color:rgba(196,181,253,0.5);margin-top:4px}
+.brut-box{background:#7C3AED;border:3px solid #000;padding:10px 18px;transform:rotate(-1deg)}
+.brut-name{font-family:'Unbounded',sans-serif;font-size:15px;font-weight:900;color:#fff;text-transform:uppercase}.brut-line{width:100%;height:3px;background:#000;margin:4px 0}.brut-msg{font-size:11px;color:rgba(255,255,255,0.7);font-weight:700}
+.hud-outer{border:1px solid rgba(0,200,255,0.3);border-radius:6px;padding:10px 20px;position:relative;text-align:center}
+.hud-corner{position:absolute;width:8px;height:8px;border-color:rgba(0,200,255,0.7);border-style:solid}
+.hud-corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}.hud-corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0}.hud-corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}.hud-corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.hud-name{font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;color:#00C8FF}.hud-name b{color:#fff}.hud-line{width:100%;height:1px;background:rgba(0,200,255,0.3);margin:4px 0}.hud-msg{font-size:10px;color:rgba(0,200,255,0.5);letter-spacing:1px;text-transform:uppercase}
+.card-info{padding:16px 18px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between}
+.c-name{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700}.c-type{font-size:11px;color:rgba(255,255,255,0.35);margin-top:3px}
+.c-free{background:rgba(16,185,129,0.15);color:#34D399;border:1px solid rgba(16,185,129,0.25);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.c-pro{background:rgba(124,58,237,0.2);color:#A78BFA;border:1px solid rgba(124,58,237,0.3);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.pro-lock{position:absolute;top:12px;right:12px;background:rgba(124,58,237,0.9);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;letter-spacing:.5px}
+footer{padding:24px 32px;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center}
+.f-logo{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:900}.f-logo span{color:#9F7AEA}
+footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><span>KYRGYZ</span>ALERTS</div>
+  <div class="nav-tabs">
+    <button class="tab" onclick="location.href='1-landing.html'">Главная</button>
+    <button class="tab active">Дизайны</button>
+    <button class="tab" onclick="location.href='4-dashboard.html'">Дашборд</button>
+  </div>
+  <button style="background:#7C3AED;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Начать</button>
+</nav>
+<div class="hero">
+  <div class="page-badge">✦ 8 стилей алертов</div>
+  <h1 class="page-title">Выбери свой стиль</h1>
+  <p class="page-sub">Каждый алерт полностью настраивается под твой стрим</p>
+  <div class="filter-bar">
+    <button class="filter-btn on" onclick="filterCards('all',this)">Все</button>
+    <button class="filter-btn" onclick="filterCards('free',this)">Бесплатные</button>
+    <button class="filter-btn" onclick="filterCards('pro',this)">PRO</button>
+  </div>
+</div>
+<div class="styles-grid" id="grid">
+  <div class="style-card" data-tier="free">
+    <div class="card-preview prev-classic"><span class="p-emoji">👍🪙</span><div class="classic-name"><b>Айбек</b> — 500с</div><div class="classic-line"></div><div class="classic-msg">Лучший стример КГ! 🔥</div></div>
+    <div class="card-info"><div><div class="c-name">Classic Purple</div><div class="c-type">Базовый стиль</div></div><div class="c-free">FREE</div></div>
+  </div>
+  <div class="style-card" data-tier="free">
+    <div class="card-preview prev-neon"><span class="p-emoji">💜✨</span><div class="neon-name"><b>Айбек</b> — 500с</div><div class="neon-line"></div><div class="neon-msg">Лучший стример КГ! 🔥</div></div>
+    <div class="card-info"><div><div class="c-name">Neon Glow</div><div class="c-type">Неоновое свечение</div></div><div class="c-free">FREE</div></div>
+  </div>
+  <div class="style-card" data-tier="free">
+    <div class="card-preview prev-minimal"><span class="p-emoji" style="font-size:32px">🤍</span><div class="min-name"><b>Айбек</b> — 500с</div><div class="min-div"></div><div class="min-msg">"Лучший стример КГ!"</div></div>
+    <div class="card-info"><div><div class="c-name">Minimal</div><div class="c-type">Чистый минимализм</div></div><div class="c-free">FREE</div></div>
+  </div>
+  <div class="style-card pro-card" data-tier="pro">
+    <div class="pro-lock">PRO</div>
+    <div class="card-preview prev-fire"><span class="p-emoji">🔥💰</span><div class="fire-name">Айбек — 500с</div><div class="fire-bar"></div><div class="fire-msg">Лучший стример КГ! 🔥</div></div>
+    <div class="card-info"><div><div class="c-name">Fire & Blood</div><div class="c-type">Огненный градиент</div></div><div class="c-pro">PRO</div></div>
+  </div>
+  <div class="style-card pro-card" data-tier="pro">
+    <div class="pro-lock">PRO</div>
+    <div class="card-preview prev-gaming"><span class="p-emoji">🎮⚡</span><div class="gaming-box"><div class="gaming-tag">донат получен</div><div class="gaming-name"><b>Айбек</b> — 500с</div><div class="gaming-msg">Лучший стример КГ!</div></div></div>
+    <div class="card-info"><div><div class="c-name">Gaming HUD</div><div class="c-type">Игровой интерфейс</div></div><div class="c-pro">PRO</div></div>
+  </div>
+  <div class="style-card pro-card" data-tier="pro">
+    <div class="pro-lock">PRO</div>
+    <div class="card-preview prev-pastel"><span class="p-emoji">💜🎀</span><div class="pastel-bubble"><div class="pastel-name"><b>Айбек</b> — 500с</div><div class="pastel-msg">Лучший стример КГ! 🔥</div></div></div>
+    <div class="card-info"><div><div class="c-name">Pastel Dream</div><div class="c-type">Мягкий стиль</div></div><div class="c-pro">PRO</div></div>
+  </div>
+  <div class="style-card pro-card" data-tier="pro">
+    <div class="pro-lock">PRO</div>
+    <div class="card-preview prev-brutalism"><span class="p-emoji" style="animation:none;font-size:36px">👊💸</span><div class="brut-box"><div class="brut-name">Айбек — 500с</div><div class="brut-line"></div><div class="brut-msg">ЛУЧШИЙ СТРИМЕР КГ!</div></div></div>
+    <div class="card-info"><div><div class="c-name">Neo-Brutalism</div><div class="c-type">Жирный и дерзкий</div></div><div class="c-pro">PRO</div></div>
+  </div>
+  <div class="style-card pro-card" data-tier="pro">
+    <div class="pro-lock">PRO</div>
+    <div class="card-preview prev-hud"><span class="p-emoji" style="font-size:32px">🛸💙</span><div class="hud-outer"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div><div class="hud-name"><b>Айбек</b> — 500с</div><div class="hud-line"></div><div class="hud-msg">лучший стример кг</div></div></div>
+    <div class="card-info"><div><div class="c-name">HUD Blue Pro</div><div class="c-type">Sci-fi интерфейс</div></div><div class="c-pro">PRO</div></div>
+  </div>
+</div>
+<footer>
+  <div class="f-logo"><span>KYRGYZ</span>ALERTS</div>
+  <p>© 2025 Kyrgyz Alerts 🇰🇬</p>
+</footer>
+<script>
+function filterCards(tier,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.style-card').forEach(card=>{
+    card.style.display=(tier==='all'||card.dataset.tier===tier)?'':'none';
+  });
+}
+</script>
+</body>
+</html>

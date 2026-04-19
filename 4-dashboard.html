@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYRGYZ ALERTS — Дашборд</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0B1A;color:#fff;font-family:'Inter',sans-serif;font-size:14px}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:#0A0816;border-right:1px solid rgba(255,255,255,0.06);padding:20px 0;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+.s-logo{padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:8px}
+.s-logo-text{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:900}.s-logo-text span{color:#9F7AEA}
+.s-logo-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px}
+.s-sec{font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;padding:12px 20px 4px}
+.s-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent}
+.s-item:hover{color:#fff;background:rgba(255,255,255,0.04)}
+.s-item.active{color:#A78BFA;background:rgba(124,58,237,0.08);border-left-color:#7C3AED}
+.s-icon{font-size:15px;width:20px;text-align:center}
+.s-badge{margin-left:auto;background:rgba(124,58,237,0.2);color:#A78BFA;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.s-bottom{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+.s-online{display:flex;align-items:center;gap:5px;font-size:11px;color:#34D399}
+.s-online::before{content:'';width:5px;height:5px;background:#34D399;border-radius:50%;display:block}
+.main{overflow-y:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;background:rgba(13,11,26,0.9);backdrop-filter:blur(12px);z-index:10}
+.topbar h1{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.5px}
+.topbar p{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
+.obs-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:8px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer}
+.obs-dot{width:7px;height:7px;background:#34D399;border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.live-btn{background:#EF4444;color:#fff;border:none;padding:8px 18px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.live-btn::before{content:'';width:7px;height:7px;background:#fff;border-radius:50%;opacity:.8;animation:blink 1s infinite}
+.content{padding:24px 28px;display:flex;flex-direction:column;gap:24px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px 16px}
+.sc-label{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px}
+.sc-val{font-family:'Unbounded',sans-serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:4px}
+.sc-val.purple{color:#A78BFA}
+.sc-up{font-size:11px;color:#34D399}.sc-down{font-size:11px;color:#F87171}
+.chart-section{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px}
+.panel-title{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;letter-spacing:-.2px}
+.panel-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding-top:10px;margin-top:20px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%}
+.bar{width:100%;border-radius:5px 5px 0 0;background:rgba(124,58,237,0.25);position:relative;cursor:pointer;min-height:4px;transition:background .2s}
+.bar.today{background:linear-gradient(180deg,#9F7AEA,#7C3AED)}
+.bar:hover{background:rgba(124,58,237,0.5)}
+.bar-label{font-size:10px;color:rgba(255,255,255,0.3)}
+.bar-val{font-size:10px;color:rgba(255,255,255,0.5);position:absolute;top:-18px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.donor-list{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.donor-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.05)}
+.d-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.d-name{flex:1;font-size:13px;font-weight:600}
+.d-amt{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:#A78BFA}
+.bottom-row{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.feed-list{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto;margin-top:16px}
+.feed-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.04);animation:feedIn .3s ease}
+@keyframes feedIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.f-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.f-name{font-size:13px;font-weight:600;flex:1}.f-msg{font-size:11px;color:rgba(255,255,255,0.35);margin-top:1px}
+.f-amt{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:#A78BFA}.f-time{font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px;text-align:right}
+.goal-bg{background:rgba(255,255,255,0.06);border-radius:10px;height:14px;overflow:hidden;margin:12px 0 8px}
+.goal-fill{height:100%;background:linear-gradient(90deg,#7C3AED,#C084FC);border-radius:10px;transition:width 1.5s ease;width:0}
+.link-box{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px;margin-top:16px}
+.link-url{flex:1;font-size:12px;color:#A78BFA;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link-copy{background:#7C3AED;color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="s-logo">
+      <div class="s-logo-text"><span>KYRGYZ</span>ALERTS</div>
+      <div class="s-logo-sub">Панель стримера</div>
+    </div>
+    <div class="s-sec">Главное</div>
+    <div class="s-item active"><span class="s-icon">📊</span>Дашборд</div>
+    <div class="s-item"><span class="s-icon">💸</span>Донаты<span class="s-badge">12</span></div>
+    <div class="s-item"><span class="s-icon">🏆</span>Топ донатеров</div>
+    <div class="s-item"><span class="s-icon">🎯</span>Цели сбора</div>
+    <div class="s-sec">Виджеты</div>
+    <div class="s-item" onclick="location.href='3-styles.html'"><span class="s-icon">🎨</span>Стили алертов</div>
+    <div class="s-item" onclick="location.href='2-obs-widget.html'"><span class="s-icon">🔔</span>OBS виджет</div>
+    <div class="s-item"><span class="s-icon">🎵</span>Музыка</div>
+    <div class="s-sec">Аккаунт</div>
+    <div class="s-item"><span class="s-icon">⚙️</span>Настройки</div>
+    <div class="s-item"><span class="s-icon">💎</span>Тариф PRO</div>
+    <div class="s-bottom">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="s-avatar">АК</div>
+        <div><div style="font-size:13px;font-weight:600">AibelKG</div><div class="s-online">В эфире</div></div>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Дашборд</h1><p>Воскресенье, 19 апреля 2026</p></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="obs-btn"><div class="obs-dot"></div>OBS подключён</div>
+        <button class="live-btn">LIVE</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-label">💰 Сегодня</div><div class="sc-val purple">4 250<span style="font-size:14px">с</span></div><div class="sc-up">↑ +18% к вчера</div></div>
+        <div class="stat-card"><div class="sc-label">📅 Этот месяц</div><div class="sc-val">38 700<span style="font-size:14px">с</span></div><div class="sc-up">↑ +32%</div></div>
+        <div class="stat-card"><div class="sc-label">👥 Донатеров</div><div class="sc-val">127</div><div class="sc-up">↑ +8 сегодня</div></div>
+        <div class="stat-card"><div class="sc-label">⚡ Средний</div><div class="sc-val">334<span style="font-size:14px">с</span></div><div class="sc-down">↓ -5%</div></div>
+      </div>
+      <div class="chart-section">
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="panel-title">Донаты по дням</div><div class="panel-sub">Последние 7 дней</div></div>
+          </div>
+          <div class="bar-chart" id="barChart"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Топ донатеров</div>
+          <div class="donor-list">
+            <div class="donor-row"><span style="font-size:14px">👑</span><div class="d-av" style="background:linear-gradient(135deg,#7C3AED,#C084FC)">НУ</div><div class="d-name">Нурлан</div><div class="d-amt">12 400с</div></div>
+            <div class="donor-row"><span style="font-size:12px;color:rgba(255,255,255,0.2);width:18px;text-align:center">2</span><div class="d-av" style="background:linear-gradient(135deg,#3B82F6,#818CF8)">АЙ</div><div class="d-name">Айбек</div><div class="d-amt">8 900с</div></div>
+            <div class="donor-row"><span style="font-size:12px;color:rgba(255,255,255,0.2);width:18px;text-align:center">3</span><div class="d-av" style="background:linear-gradient(135deg,#10B981,#34D399)">ДА</div><div class="d-name">Данияр</div><div class="d-amt">6 200с</div></div>
+            <div class="donor-row"><span style="font-size:12px;color:rgba(255,255,255,0.2);width:18px;text-align:center">4</span><div class="d-av" style="background:linear-gradient(135deg,#F59E0B,#FCD34D)">МА</div><div class="d-name">Максат</div><div class="d-amt">4 100с</div></div>
+            <div class="donor-row"><span style="font-size:12px;color:rgba(255,255,255,0.2);width:18px;text-align:center">5</span><div class="d-av" style="background:linear-gradient(135deg,#EF4444,#F87171)">БА</div><div class="d-name">Бакыт</div><div class="d-amt">3 750с</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <div class="panel">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div><div class="panel-title">Лента донатов</div><div class="panel-sub">В реальном времени</div></div>
+            <div style="font-size:11px;color:#34D399;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;background:#34D399;border-radius:50%;display:block;animation:blink 1.5s infinite"></span>Live</div>
+          </div>
+          <div class="feed-list" id="feedList"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🎯 Цель: Новый микрофон</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px">
+            <div style="font-size:13px;color:rgba(255,255,255,0.5)"><b style="color:#fff;font-size:16px">7 500</b> / 15 000с</div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;color:#A78BFA">50%</div>
+          </div>
+          <div class="goal-bg"><div class="goal-fill" id="goalFill"></div></div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px">Осталось: 7 500с</div>
+          <button style="width:100%;padding:10px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#A78BFA;border-radius:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer">✏️ Изменить цель</button>
+          <div style="margin-top:16px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;margin-bottom:10px">🔗 Ссылка виджета</div>
+          <div class="link-box">
+            <div class="link-url">kyrgyzalerts.kg/aibelkg</div>
+            <button class="link-copy" onclick="this.textContent='✓';setTimeout(()=>this.textContent='Копировать',2000)">Копировать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const barData=[{d:'Пн',v:1200},{d:'Вт',v:2800},{d:'Ср',v:1900},{d:'Чт',v:3400},{d:'Пт',v:2100},{d:'Сб',v:4800},{d:'Вс',v:4250,today:true}];
+const mx=Math.max(...barData.map(d=>d.v));
+const chart=document.getElementById('barChart');
+barData.forEach(item=>{const col=document.createElement('div');col.className='bar-col';const pct=Math.round(item.v/mx*100);col.innerHTML=`<div class="bar${item.today?' today':''}" style="height:${pct}%"><div class="bar-val">${(item.v/1000).toFixed(1)}к</div></div><div class="bar-label">${item.d}</div>`;chart.appendChild(col);});
+setTimeout(()=>document.getElementById('goalFill').style.width='50%',400);
+const donors=[{n:'Нурлан',m:'Красавчик! 🔥',a:500,c:'#7C3AED',i:'НУ',t:'только что'},{n:'Айбек',m:'Давай ещё! 💪',a:250,c:'#3B82F6',i:'АЙ',t:'1 мин'},{n:'Аноним',m:'Лучший стрим',a:1000,c:'#10B981',i:'АН',t:'3 мин'},{n:'Данияр',m:'Кыргызстан! 🇰🇬',a:300,c:'#F59E0B',i:'ДА',t:'5 мин'},{n:'Максат',m:'',a:150,c:'#EF4444',i:'МА',t:'8 мин'}];
+const feed=document.getElementById('feedList');
+donors.forEach(d=>{const el=document.createElement('div');el.className='feed-item';el.innerHTML=`<div class="f-av" style="background:${d.c}">${d.i}</div><div style="flex:1"><div class="f-name">${d.n}</div>${d.m?`<div class="f-msg">${d.m}</div>`:''}</div><div><div class="f-amt">${d.a}с</div><div class="f-time">${d.t}</div></div>`;feed.appendChild(el);});
+let i=0;const ns=['Эрлан','Калыс','Тимур','Азиз'],ms=['Го! 🎮','Красава!','КГ топ 🇰🇬','Лайк!'],cs=['#7C3AED','#3B82F6','#10B981','#F59E0B'];
+setInterval(()=>{const el=document.createElement('div');el.className='feed-item';const a=[100,200,500,300][i%4];el.innerHTML=`<div class="f-av" style="background:${cs[i%4]}">${ns[i%4].slice(0,2)}</div><div style="flex:1"><div class="f-name">${ns[i%4]}</div><div class="f-msg">${ms[i%4]}</div></div><div><div class="f-amt">${a}с</div><div class="f-time">только что</div></div>`;feed.insertBefore(el,feed.firstChild);if(feed.children.length>8)feed.removeChild(feed.lastChild);i++;},4000);
+</script>
+</body>
+</html>

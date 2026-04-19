@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Донат — AibelKG | KYRGYZ ALERTS</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0B1A;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+.bg-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse at center,rgba(124,58,237,0.12) 0%,transparent 65%);pointer-events:none;z-index:0}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid rgba(255,255,255,0.06);position:relative;z-index:10}
+.logo{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:900}.logo span{color:#9F7AEA}
+.page{display:grid;grid-template-columns:1fr 380px;gap:32px;padding:40px 32px;max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.profile-col{display:flex;flex-direction:column;gap:20px}
+.streamer-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:28px;text-align:center}
+.avatar-ring{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:#fff;margin:0 auto 14px;position:relative}
+.live-ring{position:absolute;inset:-3px;border-radius:50%;border:2px solid #EF4444;animation:liveRing 2s infinite}
+@keyframes liveRing{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.05)}}
+.live-badge{position:absolute;bottom:-2px;right:-2px;background:#EF4444;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.5px}
+.s-name{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px}
+.s-handle{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px}
+.s-bio{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:16px}
+.s-stats{display:flex;justify-content:center;border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden}
+.s-stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid rgba(255,255,255,0.07)}
+.s-stat:last-child{border-right:none}
+.s-val{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;color:#A78BFA}
+.s-lbl{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px}
+.goal-card{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:16px;padding:18px 20px}
+.goal-ttl{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px}
+.goal-bar-bg{background:rgba(255,255,255,0.07);border-radius:8px;height:10px;overflow:hidden;margin-bottom:8px}
+.goal-bar-fill{height:100%;background:linear-gradient(90deg,#7C3AED,#C084FC);border-radius:8px;transition:width 1.5s ease;width:0}
+.goal-info{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4)}
+.goal-info b{color:rgba(255,255,255,.8)}
+.mvp-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px 20px}
+.mvp-ttl{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;margin-bottom:14px}
+.mvp-rows{display:flex;flex-direction:column;gap:7px}
+.mvp-r{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:9px}
+.mvp-r.first{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15)}
+.mvp-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.mvp-n{flex:1;font-size:12px;font-weight:600}.mvp-a{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:#A78BFA}
+.form-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;position:sticky;top:24px}
+.form-title{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;letter-spacing:-.3px;margin-bottom:6px}
+.form-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:24px}
+.amounts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.amt-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 6px;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;text-align:center;transition:all .15s}
+.amt-btn:hover,.amt-btn.sel{border-color:#7C3AED;background:rgba(124,58,237,0.12);color:#A78BFA}
+.amt-custom{grid-column:span 3;display:flex;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.amt-custom:focus-within{border-color:rgba(124,58,237,0.5)}
+.amt-prefix{padding:12px 14px;font-size:14px;color:rgba(255,255,255,0.3);border-right:1px solid rgba(255,255,255,0.07)}
+.amt-custom input{flex:1;background:transparent;border:none;color:#fff;font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;padding:12px 14px;outline:none}
+.amt-custom input::placeholder{color:rgba(255,255,255,0.2);font-size:13px}
+.field{margin-bottom:14px}
+.field-lbl{font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+.field-inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.field-inp:focus{border-color:rgba(124,58,237,0.5)}
+.field-inp::placeholder{color:rgba(255,255,255,0.2)}
+textarea.field-inp{resize:none;height:80px;line-height:1.5}
+.pay-methods{display:flex;gap:8px;margin-bottom:20px}
+.pay-m{flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.pay-m:hover,.pay-m.sel{border-color:#7C3AED;background:rgba(124,58,237,0.08)}
+.pay-m-icon{font-size:18px;margin-bottom:4px}
+.pay-m-name{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5)}
+.pay-m.sel .pay-m-name{color:#A78BFA}
+.anon-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06)}
+.anon-lbl{font-size:13px;color:rgba(255,255,255,0.5)}
+.toggle{width:40px;height:22px;background:rgba(255,255,255,0.1);border-radius:11px;position:relative;cursor:pointer;transition:background .2s}
+.toggle.on{background:#7C3AED}
+.toggle-dot{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s}
+.toggle.on .toggle-dot{left:21px}
+.send-btn{width:100%;background:#7C3AED;color:#fff;border:none;padding:16px;border-radius:12px;font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.send-btn:hover{background:#6D28D9;transform:translateY(-1px)}
+.send-note{text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:10px}
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(13,11,26,0.95);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center}
+.success-overlay.show{display:flex}
+.success-emoji{font-size:72px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:900;color:#A78BFA}
+.success-sub{font-size:14px;color:rgba(255,255,255,0.5);max-width:320px;line-height:1.6}
+.success-back{background:#7C3AED;color:#fff;border:none;padding:14px 32px;border-radius:12px;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px}
+@media(max-width:680px){.page{grid-template-columns:1fr}nav{padding:14px 18px}}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<nav>
+  <div class="logo"><span>KYRGYZ</span>ALERTS</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.35)">kyrgyzalerts.kg/aibelkg</div>
+</nav>
+<div class="page">
+  <div class="profile-col">
+    <div class="streamer-card">
+      <div class="avatar-ring">АК<div class="live-ring"></div><div class="live-badge">LIVE</div></div>
+      <div class="s-name">AibelKG</div>
+      <div class="s-handle">@aibelkg · Twitch / YouTube</div>
+      <div class="s-bio">Кыргызский стример 🇰🇬 Играю в CS2, Dota 2. Каждый день в 20:00!</div>
+      <div class="s-stats">
+        <div class="s-stat"><div class="s-val">2.4к</div><div class="s-lbl">Зрителей</div></div>
+        <div class="s-stat"><div class="s-val">38.7к</div><div class="s-lbl">Донатов с</div></div>
+        <div class="s-stat"><div class="s-val">127</div><div class="s-lbl">Донатеров</div></div>
+      </div>
+    </div>
+    <div class="goal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="goal-ttl">🎯 Новый микрофон</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;color:#A78BFA">50%</div>
+      </div>
+      <div class="goal-bar-bg"><div class="goal-bar-fill" id="gfill"></div></div>
+      <div class="goal-info"><span>Собрано: <b>7 500с</b></span><span>Цель: <b>15 000с</b></span></div>
+    </div>
+    <div class="mvp-card">
+      <div class="mvp-ttl">👑 MVP донатеры</div>
+      <div class="mvp-rows">
+        <div class="mvp-r first"><span style="font-size:14px">👑</span><div class="mvp-av" style="background:linear-gradient(135deg,#7C3AED,#C084FC)">НУ</div><div class="mvp-n">Нурлан</div><div class="mvp-a">12 400с</div></div>
+        <div class="mvp-r"><span style="font-size:12px;color:rgba(255,255,255,.2);width:16px;text-align:center">2</span><div class="mvp-av" style="background:linear-gradient(135deg,#3B82F6,#818CF8)">АЙ</div><div class="mvp-n">Айбек</div><div class="mvp-a">8 900с</div></div>
+        <div class="mvp-r"><span style="font-size:12px;color:rgba(255,255,255,.2);width:16px;text-align:center">3</span><div class="mvp-av" style="background:linear-gradient(135deg,#10B981,#34D399)">ДА</div><div class="mvp-n">Данияр</div><div class="mvp-a">6 200с</div></div>
+        <div class="mvp-r"><span style="font-size:12px;color:rgba(255,255,255,.2);width:16px;text-align:center">4</span><div class="mvp-av" style="background:linear-gradient(135deg,#F59E0B,#FCD34D)">МА</div><div class="mvp-n">Максат</div><div class="mvp-a">4 100с</div></div>
+        <div class="mvp-r"><span style="font-size:12px;color:rgba(255,255,255,.2);width:16px;text-align:center">5</span><div class="mvp-av" style="background:linear-gradient(135deg,#EF4444,#F87171)">БА</div><div class="mvp-n">Бакыт</div><div class="mvp-a">3 750с</div></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="form-card">
+      <div class="form-title">Отправить донат</div>
+      <div class="form-sub">Донат придёт напрямую стримеру через Mbank</div>
+      <div class="amounts-grid">
+        <div class="amt-btn" onclick="selAmt(this,'100')">100с</div>
+        <div class="amt-btn sel" onclick="selAmt(this,'250')">250с</div>
+        <div class="amt-btn" onclick="selAmt(this,'500')">500с</div>
+        <div class="amt-btn" onclick="selAmt(this,'1000')">1 000с</div>
+        <div class="amt-btn" onclick="selAmt(this,'2000')">2 000с</div>
+        <div class="amt-btn" onclick="selAmt(this,'5000')">5 000с</div>
+        <div class="amt-custom"><span class="amt-prefix">с</span><input type="number" placeholder="Своя сумма" id="customAmt" oninput="clearSel()"></div>
+      </div>
+      <div class="field"><div class="field-lbl">Твоё имя</div><input class="field-inp" placeholder="Как тебя зовут?" id="donorName"></div>
+      <div class="field"><div class="field-lbl">Сообщение стримеру</div><textarea class="field-inp" placeholder="Напиши что-нибудь... 🎮" id="donorMsg"></textarea></div>
+      <div class="field-lbl" style="margin-bottom:8px">Способ оплаты</div>
+      <div class="pay-methods">
+        <div class="pay-m sel" onclick="selPay(this)"><div class="pay-m-icon">💳</div><div class="pay-m-name">Mbank</div></div>
+        <div class="pay-m" onclick="selPay(this)"><div class="pay-m-icon">💳</div><div class="pay-m-name">Visa/MC</div></div>
+      </div>
+      <div class="anon-row">
+        <div class="anon-lbl">🎭 Анонимный донат</div>
+        <div class="toggle" id="anonToggle" onclick="this.classList.toggle('on')"><div class="toggle-dot"></div></div>
+      </div>
+      <button class="send-btn" onclick="sendDonate()">👍 Отправить — <span id="btnAmt">250с</span></button>
+      <div class="send-note">0% комиссии · Деньги идут напрямую стримеру</div>
+    </div>
+  </div>
+</div>
+<div class="success-overlay" id="success">
+  <div class="success-emoji">🎉</div>
+  <div class="success-title">Донат отправлен!</div>
+  <div class="success-sub" id="successMsg">Твой донат уже летит к стримеру!</div>
+  <button class="success-back" onclick="document.getElementById('success').classList.remove('show')">← Вернуться</button>
+</div>
+<script>
+let selAmount='250';
+function selAmt(el,val){selAmount=val;document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('customAmt').value='';updateBtn();}
+function clearSel(){document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('sel'));selAmount=document.getElementById('customAmt').value;updateBtn();}
+function selPay(el){document.querySelectorAll('.pay-m').forEach(m=>m.classList.remove('sel'));el.classList.add('sel');}
+function updateBtn(){document.getElementById('btnAmt').textContent=(selAmount||'?')+'с';}
+function sendDonate(){
+  const name=document.getElementById('donorName').value;
+  const msg=document.getElementById('donorMsg').value;
+  const anon=document.getElementById('anonToggle').classList.contains('on');
+  const dn=anon?'Аноним':(name||'Аноним');
+  document.getElementById('successMsg').textContent=`${dn} → ${selAmount}с для AibelKG. ${msg?'"'+msg+'"':'Спасибо за поддержку!'}`;
+  document.getElementById('success').classList.add('show');
+}
+setTimeout(()=>document.getElementById('gfill').style.width='50%',400);
+</script>
+</body>
+</html>

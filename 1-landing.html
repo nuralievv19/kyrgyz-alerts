@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYRGYZ ALERTS — 0% комиссии</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:#111;font-family:'Inter',sans-serif;overflow-x:hidden}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:100}
+.logo{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;letter-spacing:-0.5px}
+.logo span:first-child{color:#7C3AED}.logo span:last-child{color:#111}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:#666;text-decoration:none;font-size:13px;font-weight:500}
+.nav-links a:hover{color:#111}
+.nav-cta{background:transparent;color:#7C3AED;border:2px solid #7C3AED;padding:9px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s}
+.nav-cta:hover{background:#7C3AED;color:#fff}
+.hero{padding:72px 40px 60px;text-align:center;border-bottom:1px solid #eee}
+.hero-card{display:inline-block;border:2.5px solid #7C3AED;border-radius:28px;padding:44px 60px;max-width:540px;width:100%}
+.hero-title{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:900;letter-spacing:-0.5px;margin-bottom:6px}
+.hero-divider{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 10px}
+.hero-divider::before,.hero-divider::after{content:'';width:28px;height:2px;background:#111;display:block}
+.hero-commission{font-family:'Unbounded',sans-serif;font-size:36px;font-weight:900;color:#7C3AED;margin-bottom:8px}
+.hero-sub{font-size:15px;color:#444;margin-bottom:28px;line-height:1.6}
+.hero-sub b{color:#0D9488}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-black{background:#111;color:#fff;border:none;padding:14px 32px;border-radius:12px;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.btn-black:hover{background:#333}
+.btn-purple{background:transparent;color:#7C3AED;border:2px solid #7C3AED;padding:14px 32px;border-radius:12px;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s}
+.btn-purple:hover{background:#7C3AED;color:#fff}
+.hero-stats{display:flex;justify-content:center;gap:48px}
+.stat-label{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#888;text-transform:uppercase;margin-bottom:4px}
+.stat-val{font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:#7C3AED}
+section{padding:60px 40px;border-bottom:1px solid #eee}
+.section-tag{font-size:11px;font-weight:700;letter-spacing:2px;color:#7C3AED;text-transform:uppercase;margin-bottom:10px}
+h2{font-family:'Unbounded',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:900;letter-spacing:-0.5px;margin-bottom:32px;line-height:1.2}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #eee;border-radius:16px;overflow:hidden}
+.step{padding:28px 22px;border-right:1px solid #eee}
+.step:last-child{border-right:none}
+.step-num{font-family:'Unbounded',sans-serif;font-size:40px;font-weight:900;color:#f0edff;line-height:1;margin-bottom:12px}
+.step h3{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px}
+.step p{font-size:12px;color:#777;line-height:1.6}
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:560px}
+.price-card{border-radius:16px;padding:28px 24px;border:1.5px solid #eee}
+.price-card.pro{border-color:#7C3AED;position:relative}
+.price-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#7C3AED;color:#fff;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;letter-spacing:1px;white-space:nowrap}
+.p-tier{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#999;text-transform:uppercase;margin-bottom:10px}
+.p-val{font-family:'Unbounded',sans-serif;font-size:32px;font-weight:900;margin-bottom:4px}
+.p-val.free{color:#111}.p-val.prov{color:#7C3AED}
+.p-sub{font-size:12px;color:rgba(124,58,237,0.6);margin-bottom:4px}
+.p-note{font-size:12px;color:#999;margin-bottom:20px}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.p-feats li{font-size:13px;color:#555;display:flex;gap:8px}
+.p-feats li.ok::before{content:'✓';color:#7C3AED;font-weight:700;flex-shrink:0}
+.p-feats li.no::before{content:'–';color:#ccc;flex-shrink:0}
+.p-btn{width:100%;padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.p-btn.b{background:#111;color:#fff;border:none}.p-btn.p{background:#7C3AED;color:#fff;border:none}
+.p-btn:hover{opacity:.8}
+footer{padding:24px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer .logo{font-size:16px}
+footer p{font-size:12px;color:#999}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><span>KYRGYZ</span><span>ALERTS</span></div>
+  <ul class="nav-links">
+    <li><a href="3-styles.html">Дизайны</a></li>
+    <li><a href="#">Инструкция</a></li>
+    <li><a href="5-donate.html">Донат</a></li>
+  </ul>
+  <button class="nav-cta">Скачать Free</button>
+</nav>
+<div class="hero">
+  <div class="hero-card">
+    <div class="hero-title">KYRGYZ ALERTS</div>
+    <div class="hero-divider"></div>
+    <div class="hero-commission">0% КОМИССИИ</div>
+    <p class="hero-sub">Прямые зачисления на <b>Mbank</b> без посредников.</p>
+    <div class="hero-btns">
+      <button class="btn-black">СКАЧАТЬ FREE</button>
+      <button class="btn-purple">КУПИТЬ PRO</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-label">Стримеров</div><div class="stat-val" id="s1">0</div></div>
+      <div><div class="stat-label">Всего донатов</div><div class="stat-val" id="s2">0</div></div>
+    </div>
+  </div>
+</div>
+<section>
+  <div class="section-tag">Как работает</div>
+  <h2>Три простых шага</h2>
+  <div class="steps-grid">
+    <div class="step"><div class="step-num">01</div><h3>Скачай</h3><p>Скачай Free версию через Telegram. Установка за 2 минуты.</p></div>
+    <div class="step"><div class="step-num">02</div><h3>Настрой</h3><p>Свяжи телефон с ПК через «Связь с телефоном» и добавь Browser Source в OBS.</p></div>
+    <div class="step"><div class="step-num">03</div><h3>Стримь</h3><p>Зрители переводят на Mbank — алерт мгновенно на экране.</p></div>
+    <div class="step"><div class="step-num">04</div><h3>Получай</h3><p>Деньги идут прямо на карту. 0% комиссии.</p></div>
+  </div>
+</section>
+<section>
+  <div class="section-tag">Тарифы</div>
+  <h2>Free или Pro?</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="p-tier">Старт</div>
+      <div class="p-val free">Free</div>
+      <div class="p-note">Для начинающих стримеров</div>
+      <ul class="p-feats">
+        <li class="ok">Mbank алерты</li>
+        <li class="ok">OBS / TikTok Studio</li>
+        <li class="ok">4 стиля алертов</li>
+        <li class="no">PRO стили</li>
+        <li class="no">Топ донатеров</li>
+        <li class="no">Цели сбора</li>
+      </ul>
+      <button class="p-btn b">Скачать Free</button>
+    </div>
+    <div class="price-card pro">
+      <div class="price-tag">ХИТОВЫЙ</div>
+      <div class="p-tier">Про</div>
+      <div class="p-val prov">699<span style="font-size:18px">с</span></div>
+      <div class="p-sub">разовая покупка навсегда</div>
+      <div class="p-note">Полный доступ без подписки</div>
+      <ul class="p-feats">
+        <li class="ok">Всё из Free</li>
+        <li class="ok">Все PRO стили</li>
+        <li class="ok">Топ донатеров MVP</li>
+        <li class="ok">Цели сбора</li>
+        <li class="ok">TTS на кыргызском</li>
+        <li class="ok">Приоритетная поддержка</li>
+      </ul>
+      <button class="p-btn p">Купить PRO — 699с</button>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="logo"><span>KYRGYZ</span><span>ALERTS</span></div>
+  <p>Сделано для кыргызских стримеров 🇰🇬</p>
+  <p>© 2025 Kyrgyz Alerts</p>
+</footer>
+<script>
+function animCount(el,target,dur){let v=0,step=target/(dur/16);const t=setInterval(()=>{v+=step;if(v>=target){el.textContent=target.toLocaleString();clearInterval(t);}else el.textContent=Math.floor(v).toLocaleString();},16);}
+setTimeout(()=>{animCount(document.getElementById('s1'),393,1000);animCount(document.getElementById('s2'),73890,1600);},300);
+</script>
+</body>
+</html>

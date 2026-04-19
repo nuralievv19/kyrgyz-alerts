@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYRGYZ ALERTS — Регистрация</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0B1A;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+
+.bg-glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(124,58,237,0.15),transparent 70%);pointer-events:none;z-index:0}
+
+.container{max-width:480px;width:100%;position:relative;z-index:1}
+
+.header{text-align:center;margin-bottom:40px}
+.logo{font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;margin-bottom:8px}
+.logo span:first-child{color:#9F7AEA}
+.tagline{font-size:13px;color:rgba(255,255,255,0.5)}
+
+.form-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:40px;margin-bottom:24px;backdrop-filter:blur(12px)}
+
+.form-title{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,#7C3AED,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.form-subtitle{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:32px}
+
+.form-group{margin-bottom:18px}
+.form-label{font-size:12px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:8px;display:block}
+.form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:all .2s}
+.form-input:focus{border-color:#7C3AED;background:rgba(124,58,237,0.08);box-shadow:0 0 20px rgba(124,58,237,0.2)}
+.form-input::placeholder{color:rgba(255,255,255,0.25)}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.password-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;display:flex;align-items:flex-start;gap:6px}
+.password-hint::before{content:'ℹ️';flex-shrink:0}
+
+.checkbox-label{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,0.6);cursor:pointer;margin-bottom:20px}
+.checkbox-label input{width:16px;height:16px;cursor:pointer;accent-color:#7C3AED;margin-top:2px;flex-shrink:0}
+.checkbox-label a{color:#A78BFA;text-decoration:none}
+.checkbox-label a:hover{text-decoration:underline}
+
+.btn-signup{width:100%;background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff;border:none;padding:16px;border-radius:10px;font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-signup:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(124,58,237,0.4)}
+.btn-signup:active{transform:translateY(0)}
+
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:rgba(255,255,255,0.2)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+.divider-text{font-size:12px}
+
+.oauth-buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.oauth-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,0.7);font-weight:600;font-size:13px}
+.oauth-btn:hover{border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.06);color:#fff}
+.oauth-icon{font-size:18px}
+
+.login-prompt{text-align:center;font-size:13px;color:rgba(255,255,255,0.5)}
+.login-prompt a{color:#A78BFA;text-decoration:none;font-weight:600;transition:color .2s}
+.login-prompt a:hover{color:#fff}
+
+.success-message{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:#34D399;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:20px;display:none;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.footer-links{text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-top:24px}
+.footer-links a{color:#A78BFA;text-decoration:none}
+
+@media(max-width:600px){
+  .form-card{padding:28px 20px}
+  .container{max-width:100%}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo"><span>KYRGYZ</span>ALERTS</div>
+    <div class="tagline">Платформа для стримеров 🇰🇬</div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">Создай аккаунт</div>
+    <div class="form-subtitle">Присоединись к тысячам стримеров</div>
+
+    <div class="success-message" id="successMsg">
+      ✓ Аккаунт создан! Перенаправляю...
+    </div>
+
+    <form onsubmit="handleSignup(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Имя</label>
+          <input type="text" class="form-input" placeholder="Твоё имя" id="firstNameInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Фамилия</label>
+          <input type="text" class="form-input" placeholder="Фамилия" id="lastNameInput" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email адрес</label>
+        <input type="email" class="form-input" placeholder="твой@email.com" id="emailInput" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Никнейм (для профиля)</label>
+        <input type="text" class="form-input" placeholder="aibelkg" id="usernameInput" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input type="password" class="form-input" placeholder="Минимум 8 символов" id="passwordInput" required minlength="8">
+        <div class="password-hint">Используй буквы, цифры, спецсимволы</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Подтвердить пароль</label>
+        <input type="password" class="form-input" placeholder="Повтори пароль" id="passwordConfirmInput" required minlength="8">
+      </div>
+
+      <label class="checkbox-label">
+        <input type="checkbox" id="termsCheckbox" required>
+        Я согласен с <a href="#">условиями использования</a> и <a href="#">политикой конфиденциальности</a>
+      </label>
+
+      <button type="submit" class="btn-signup">
+        ✨ Создать аккаунт
+      </button>
+    </form>
+
+    <div class="divider">
+      <span class="divider-text">или зарегистрируйся через</span>
+    </div>
+
+    <div class="oauth-buttons">
+      <button type="button" class="oauth-btn" onclick="handleOAuth('google')">
+        <span class="oauth-icon">🔵</span>
+        <span>Google</span>
+      </button>
+      <button type="button" class="oauth-btn" onclick="handleOAuth('telegram')">
+        <span class="oauth-icon">✈️</span>
+        <span>Telegram</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="login-prompt">
+    Уже есть аккаунт? <a href="12-login.html">Войди здесь</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="1-landing.html">← На главную</a> · 
+    <a href="9-faq.html">Помощь</a>
+  </div>
+</div>
+
+<script>
+function handleSignup(e) {
+  e.preventDefault();
+  
+  const firstName = document.getElementById('firstNameInput').value;
+  const lastName = document.getElementById('lastNameInput').value;
+  const email = document.getElementById('emailInput').value;
+  const username = document.getElementById('usernameInput').value;
+  const password = document.getElementById('passwordInput').value;
+  const passwordConfirm = document.getElementById('passwordConfirmInput').value;
+  const termsAccepted = document.getElementById('termsCheckbox').checked;
+
+  // Валидация
+  if (password !== passwordConfirm) {
+    alert('⚠️ Пароли не совпадают!');
+    return;
+  }
+
+  if (!termsAccepted) {
+    alert('⚠️ Нужно согласиться с условиями использования');
+    return;
+  }
+
+  if (firstName && lastName && email && username && password) {
+    // Показываем успех
+    const successMsg = document.getElementById('successMsg');
+    successMsg.style.display = 'block';
+
+    // Сохраняем в localStorage (имитация регистрации)
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userUsername', username);
+    localStorage.setItem('userFullName', `${firstName} ${lastName}`);
+
+    // Перенаправляем на дашборд
+    setTimeout(() => {
+      alert(`✓ Добро пожаловать, ${firstName}!`);
+      location.href = '4-dashboard.html';
+    }, 1000);
+  }
+}
+
+function handleOAuth(provider) {
+  alert(`🔗 OAuth через ${provider} (в реальном приложении)`);
+  // В реальном приложении будет редирект на OAuth сервис
+}
+</script>
+</body>
+</html>
