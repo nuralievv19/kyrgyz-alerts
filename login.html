@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход — KyryzAlerts</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f0a1e;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(124,58,237,0.35) 0%,transparent 70%);pointer-events:none}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;position:relative;z-index:10}
+.logo{display:flex;align-items:center;gap:8px;font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;text-decoration:none;color:#fff}
+.logo-icon{background:linear-gradient(135deg,#7C3AED,#C084FC);border-radius:8px;padding:6px 9px;font-size:13px}
+.nav-reg{font-size:14px;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .2s}
+.nav-reg:hover{color:#fff}
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px;position:relative;z-index:1}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:40px;width:100%;max-width:420px;backdrop-filter:blur(10px)}
+.card-title{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;margin-bottom:6px;letter-spacing:-.5px}
+.card-sub{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:32px}
+.field{margin-bottom:18px}
+.field-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block}
+.field-input{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:#7C3AED}
+.field-input::placeholder{color:rgba(255,255,255,0.25)}
+.phone-row{display:flex;gap:8px}
+.phone-prefix{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;color:rgba(255,255,255,0.6);font-size:15px;white-space:nowrap;font-weight:600}
+.phone-row .field-input{flex:1}
+.password-wrap{position:relative}
+.password-wrap .field-input{padding-right:48px}
+.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;font-size:18px;padding:4px}
+.forgot{text-align:right;margin-top:-10px;margin-bottom:18px}
+.forgot a{font-size:12px;color:#A78BFA;text-decoration:none}
+.forgot a:hover{text-decoration:underline}
+.submit-btn{width:100%;background:linear-gradient(135deg,#7C3AED,#9333EA);color:#fff;border:none;padding:16px;border-radius:12px;font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;position:relative}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,0.4)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.loader{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
+.divider span{font-size:12px;color:rgba(255,255,255,0.3)}
+.reg-link{text-align:center;font-size:14px;color:rgba(255,255,255,0.45)}
+.reg-link a{color:#A78BFA;text-decoration:none;font-weight:600}
+.reg-link a:hover{text-decoration:underline}
+.alert-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;font-size:13px;color:#FCA5A5;margin-bottom:20px;display:none}
+.alert-success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:12px 16px;font-size:13px;color:#6EE7B7;margin-bottom:20px;display:none}
+.welcome-back{text-align:center;margin-bottom:24px}
+.welcome-emoji{font-size:48px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<nav>
+  <a class="logo" href="index.html">
+    <span class="logo-icon">KA🔔</span>KyryzAlerts
+  </a>
+  <a class="nav-reg" href="register.html">Нет аккаунта? Зарегистрироваться →</a>
+</nav>
+
+<div class="page">
+  <div class="card">
+    <div class="welcome-back">
+      <div class="welcome-emoji">👋</div>
+    </div>
+    <div class="card-title">С возвращением!</div>
+    <div class="card-sub">Войди чтобы продолжить стримить</div>
+
+    <div class="alert-error" id="alertError"></div>
+    <div class="alert-success" id="alertSuccess"></div>
+
+    <div class="field">
+      <label class="field-label">Номер телефона</label>
+      <div class="phone-row">
+        <div class="phone-prefix">🇰🇬 +996</div>
+        <input class="field-input" id="phone" placeholder="700 123 456" type="tel" maxlength="9">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Пароль</label>
+      <div class="password-wrap">
+        <input class="field-input" id="password" placeholder="Введи пароль" type="password">
+        <button class="eye-btn" onclick="togglePass()" type="button">👁</button>
+      </div>
+    </div>
+
+    <div class="forgot"><a href="#">Забыл пароль?</a></div>
+
+    <button class="submit-btn" id="submitBtn" onclick="login()">
+      <span id="btnText">Войти →</span>
+      <div class="loader" id="btnLoader"></div>
+    </button>
+
+    <div class="divider"><span>или</span></div>
+    <div class="reg-link">Нет аккаунта? <a href="register.html">Зарегистрироваться</a></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://kyrgyz-alerts-production.up.railway.app';
+
+// Если уже залогинен — редиректим
+if (localStorage.getItem('token')) {
+  window.location.href = 'dashboard.html';
+}
+
+function togglePass() {
+  const inp = document.getElementById('password');
+  const btn = document.querySelector('.eye-btn');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function showError(msg) {
+  const el = document.getElementById('alertError');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('alertSuccess').style.display = 'none';
+}
+function showSuccess(msg) {
+  const el = document.getElementById('alertSuccess');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('alertError').style.display = 'none';
+}
+
+async function login() {
+  const phone = '+996' + document.getElementById('phone').value.replace(/\s/g,'');
+  const password = document.getElementById('password').value;
+
+  if (phone.length < 13) return showError('Введи правильный номер телефона');
+  if (!password) return showError('Введи пароль');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('btnText').style.display = 'none';
+  document.getElementById('btnLoader').style.display = 'block';
+
+  try {
+    const res = await fetch(`${API}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      showSuccess('Добро пожаловать! Загружаем дашборд...');
+      setTimeout(() => window.location.href = 'dashboard.html', 1200);
+    } else {
+      showError(data.error || 'Неверный телефон или пароль');
+    }
+  } catch(e) {
+    showError('Ошибка сети. Проверь подключение.');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('btnText').style.display = 'block';
+    document.getElementById('btnLoader').style.display = 'none';
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>
