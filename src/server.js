@@ -4,11 +4,12 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 const { Pool } = require('pg');
 
+// Firebase — ключ напрямую
 admin.initializeApp({
   credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    projectId: "kyrgyz-alerts",
+    privateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPRHHlFITdInoB\n8nYoU11ErDgZbNDRPw+qYFAZMbG8AgeytPVpfg/F+BV839BtOG8O2TW3qJIj1hqN\nY7giw9m/7HKq/cwIREsVC7jaREUC4NRuaix+GhhynMKPi7Cm2nSx+9Drd833qvuo\nsEpyniqD3IILL7KbFhOrVdewe1WjRhFtqhFS4K2MBmKdRsplwIpoZKMjCoYKKGEV\nGCszHMJUf3zVub7DA1wnCrkUtlDUgxaVqk5Q30DZdR7iEVVLOm4mGl8Ih6WnCQct\nVJScO8j0XaoEha+Kn2D4uwn8OPfww2tKz9KGyhxsleT5pvADkl5/930R4B9XwxfX\nwRX9UecHAgMBAAECggEAIVAxdC3jmv1PGeAEEMAxZfe+PovoVjFqDarURPBhTkQP\nQ7BlH3MFCv8wSPVaNSvUYdEUmrPL5Vmkw+PqtR/AcGILHiOTtyJu5O+Q4vgFFYzY\nZ/TFuPDtzAIZHWRI3NCQ4AiG0Endv3hqYXcQSDLWx4HaHv0oGlgmiivOco2oOoke\nst2FQZ1T5ygLcnmCPJEA90pugujW5QewGcsqQaJwKGk7RMaH4jkjhXr4hm/WbGJq\nd9TCHOvqUPiRRbPoPDgp7/HKBEbx2yRgoM9SxbjCgrv5seqAgZT89ee2Epy6Qk1w\nFrfrFHV9RhMqpD61j8FMxyYS2RTp+0oPwj1BzAti7QKBgQD7Bgt3f1z62greQc4g\nHMuPUasCdAUW77bsLRFdFGhPLtHNK/KOqdzw5DWN74hOZXIRcod6+s30ZZnvRT7X\nBIBnuXxfze119fpqdGqNSjDE48dLUqrbapvxgKPxLwIRv9yrAXkLGFusah67Op8c\nGdaCZQptL30EsUGvBoUQJYoLCwKBgQDTYFXYfUJ0gNFljWElgGADI2ClQa8NYefG\nT6NB1VceGd6kG1QYXzddW0tU43qRk1feO8+G5cj9fliPtr/nFOg42eqQ2nV8IsqX\nr9zBxnGFo3pAqIqzwDi+chVGUGWgKPYmZLqPxHOe46yshmhBm3rustNyQsGFdX8i\nyriEI/FxdQKBgAbBruVUhEgsPkalNssee0wsQpIaVVi8swvAWstKlVQsSnFfUXQN\nlmjVe6uKWvzhNiTKFGN3BLwjT/Vkw8A92sbv8y0Q+edG66qZ35RV/uINz3tzii3F\nvNTPRZpkTYX0yBfCPmPSEAWgBZu8hDPZbjCsT4+Iy7CopL/1SPeaSxDpAoGBAJvv\nyeT4I3qHPfNJJY3g8vPduYKwvk+FFtO6FJqQpMBUHWe7sYJ5XALHQv/RAa87n+sW\n/LZr9qbr+rGrBE+ZoOev+9f5EgsOL59P4fAiUcVhIONqc0jAWhxFVWSWEyLglRcl\n4GwHZbSmCdENJwSfi0VlL5Bvpwyp7azhGNaDHa+xAoGBAIBiP2VlhOxyxHgB5kyj\nr40qFQejRePhePnqMj24LYWwS9W5CpMK0ZXuyJVhQoy8Jzv1KWTxGxBMS6O7aLV9\nkw7MHoLUyj7NNIcq0EtdVMvJHzy5WvEmE4G5bRLLS7JO3c/unfLi3++03R9DPaWW\nt5Ly7Ij5jU6NPya1u5oodMZo\n-----END PRIVATE KEY-----\n",
+    clientEmail: "firebase-adminsdk-fbsvc@kyrgyz-alerts.iam.gserviceaccount.com",
   }),
 });
 
