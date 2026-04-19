@@ -2,8 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-// Firebase — ключ напрямую в коде
+const JWT_SECRET = process.env.JWT_SECRET || 'kyrgyz-alerts-secret-2026';
+
+// Firebase
 const serviceAccount = {
   type: "service_account",
   project_id: "kyrgyz-alerts",
@@ -15,9 +19,7 @@ const serviceAccount = {
   token_uri: "https://oauth2.googleapis.com/token"
 };
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 // PostgreSQL
 const pool = new Pool({
@@ -30,13 +32,17 @@ async function initDB() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS streamers (
         id SERIAL PRIMARY KEY,
+        full_name VARCHAR(100),
         username VARCHAR(100) UNIQUE NOT NULL,
+        phone VARCHAR(20) UNIQUE,
+        password_hash TEXT,
         fcm_token TEXT,
+        mbank_phone VARCHAR(20),
         created_at TIMESTAMP DEFAULT NOW()
       );
       CREATE TABLE IF NOT EXISTS donations (
         id SERIAL PRIMARY KEY,
-        streamer_id INTEGER,
+        streamer_id INTEGER REFERENCES streamers(id),
         donor_name VARCHAR(100) NOT NULL,
         amount INTEGER NOT NULL,
         message TEXT,
@@ -44,7 +50,7 @@ async function initDB() {
       );
     `);
     console.log('✅ Таблицы готовы');
-  } catch (e) {
+  } catch(e) {
     console.error('❌ DB error:', e.message);
   }
 }
@@ -53,28 +59,101 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── Health ──
 app.get('/', (req, res) => {
   res.json({ status: '✅ KYRGYZ ALERTS Server работает!' });
 });
 
-// Зарегистрировать стримера
-app.post('/api/streamers', async (req, res) => {
-  const { username, fcmToken } = req.body;
+// ── РЕГИСТРАЦИЯ ──
+app.post('/api/auth/register', async (req, res) => {
+  const { fullName, username, phone, password } = req.body;
+  if (!username || !phone || !password) {
+    return res.status(400).json({ error: 'Заполни все поля' });
+  }
+  try {
+    // Проверить что никнейм и телефон свободны
+    const exists = await pool.query(
+      `SELECT id FROM streamers WHERE username = $1 OR phone = $2`,
+      [username.toLowerCase(), phone]
+    );
+    if (exists.rows.length > 0) {
+      return res.status(400).json({ error: 'Никнейм или телефон уже занят' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      `INSERT INTO streamers (full_name, username, phone, password_hash)
+       VALUES ($1, $2, $3, $4) RETURNING id, username, full_name`,
+      [fullName || username, username.toLowerCase(), phone, passwordHash]
+    );
+
+    const user = result.rows[0];
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
+
+    console.log(`✅ Новый стример: ${user.username}`);
+    res.json({ success: true, token, user: { id: user.id, username: user.username, fullName: user.full_name } });
+  } catch(e) {
+    console.error('❌ Register error:', e.message);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+// ── ВХОД ──
+app.post('/api/auth/login', async (req, res) => {
+  const { phone, password } = req.body;
+  if (!phone || !password) {
+    return res.status(400).json({ error: 'Введи телефон и пароль' });
+  }
   try {
     const result = await pool.query(
-      `INSERT INTO streamers (username, fcm_token)
-       VALUES ($1, $2)
-       ON CONFLICT (username) DO UPDATE SET fcm_token = $2
-       RETURNING id, username`,
-      [username, fcmToken || null]
+      `SELECT id, username, full_name, password_hash FROM streamers WHERE phone = $1`,
+      [phone]
     );
-    res.json({ success: true, streamer: result.rows[0] });
-  } catch (e) {
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Неверный телефон или пароль' });
+    }
+
+    const user = result.rows[0];
+    const valid = await bcrypt.compare(password, user.password_hash);
+    if (!valid) {
+      return res.status(401).json({ error: 'Неверный телефон или пароль' });
+    }
+
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
+    console.log(`✅ Вход: ${user.username}`);
+    res.json({ success: true, token, user: { id: user.id, username: user.username, fullName: user.full_name } });
+  } catch(e) {
+    console.error('❌ Login error:', e.message);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+// ── Middleware: проверка токена ──
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Нет токена' });
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch(e) {
+    res.status(401).json({ error: 'Токен недействителен' });
+  }
+}
+
+// ── Профиль стримера ──
+app.get('/api/auth/me', authMiddleware, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, username, full_name, phone, mbank_phone, created_at FROM streamers WHERE id = $1`,
+      [req.user.id]
+    );
+    res.json({ success: true, user: result.rows[0] });
+  } catch(e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// Принять донат и отправить push
+// ── Донаты ──
 app.post('/api/donations', async (req, res) => {
   const { streamerId, donorName, amount, message } = req.body;
   if (!streamerId || !donorName || !amount) {
@@ -82,45 +161,32 @@ app.post('/api/donations', async (req, res) => {
   }
   try {
     const result = await pool.query(
-      `INSERT INTO donations (streamer_id, donor_name, amount, message)
-       VALUES ($1, $2, $3, $4) RETURNING id`,
+      `INSERT INTO donations (streamer_id, donor_name, amount, message) VALUES ($1,$2,$3,$4) RETURNING id`,
       [streamerId, donorName, amount, message || null]
     );
     const donationId = result.rows[0].id;
     console.log(`💸 Донат #${donationId}: ${donorName} → ${amount}с`);
 
-    // Push уведомление
-    const streamer = await pool.query(
-      `SELECT fcm_token FROM streamers WHERE id = $1`, [streamerId]
-    );
+    const streamer = await pool.query(`SELECT fcm_token FROM streamers WHERE id = $1`, [streamerId]);
     let pushSent = false;
     if (streamer.rows[0]?.fcm_token) {
       await admin.messaging().send({
         token: streamer.rows[0].fcm_token,
-        notification: {
-          title: '🎉 KYRGYZ ALERTS',
-          body: `${donorName} отправил ${amount} сом!`,
-        },
-        data: {
-          donorName,
-          amount: amount.toString(),
-          message: message || '',
-        },
+        notification: { title: '🎉 KYRGYZ ALERTS', body: `${donorName} отправил ${amount} сом!` },
+        data: { donorName, amount: amount.toString(), message: message || '' },
         android: { priority: 'high' },
         apns: { payload: { aps: { sound: 'default' } } },
       });
       pushSent = true;
       console.log(`🔔 Push отправлен!`);
     }
-
     res.json({ success: true, donationId, pushSent });
-  } catch (e) {
+  } catch(e) {
     console.error('❌', e.message);
     res.status(500).json({ error: e.message });
   }
 });
 
-// История донатов
 app.get('/api/donations/:streamerId', async (req, res) => {
   try {
     const result = await pool.query(
@@ -128,7 +194,21 @@ app.get('/api/donations/:streamerId', async (req, res) => {
       [req.params.streamerId]
     );
     res.json({ success: true, donations: result.rows });
-  } catch (e) {
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── Публичный профиль стримера ──
+app.get('/api/streamers/:username', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, username, full_name, mbank_phone FROM streamers WHERE username = $1`,
+      [req.params.username.toLowerCase()]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Стример не найден' });
+    res.json({ success: true, streamer: result.rows[0] });
+  } catch(e) {
     res.status(500).json({ error: e.message });
   }
 });
